@@ -6,11 +6,11 @@ colocar todos os atributos de distancia
 
 Enviar email e senha para validar na api
 
-//Trocar a url por string xml para apontar pra todos o ip
+//Trocar a url por string xml para apontar pra todos o ip(FEITO)
 
- (FEITO)Mudar para post na hora de autenticar o usu·rio 
+Mudar para post na hora de autenticar o usu√°rio 
 
-os comandos sql n·o deveriam estar no controller, tem que cria-los em um model ou repository
+os comandos sql n√°o deveriam estar no controller, tem que cria-los em um model ou repository
 
 
 
