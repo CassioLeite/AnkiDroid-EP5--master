@@ -1,0 +1,16 @@
+colocar um gitignore e remover o package
+
+remover os text e colocar style
+
+colocar todos os atributos de distancia
+
+Enviar email e senha para validar na api
+
+Trocar a url por string xml para apontar pra todos o ip
+
+Mudar para post na hora de autenticar o usuário 
+
+os comandos sql náo deveriam estar no controller, tem que cria-los em um model ou repository
+
+
+

@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">AnkiOAB</string>
+    <string name="url_api">"http://20.0.1.67/Anki2"</string>
+</resources>
