@@ -9,16 +9,16 @@ import feign.RequestLine;
 
 public interface UsuarioRequest {
 
-    @RequestLine("GET /api/Usuario/Get?id={id}")
-    Usuario getUsuario(@Param ("id") String id);
+    @RequestLine("GET /api/Usuario/Get")
+    Usuario getUsuario(String id);
 
-    @RequestLine("DELETE /posts/{id}/")
-    void deleteUsuario(@Param("id") Integer id);
+    @RequestLine("DELETE /api/Usuario/Delete")
+    void deleteUsuario(Integer id);
 
-    @RequestLine("POST /posts")
+    @RequestLine("POST /api/Usuario/Post")
     void createUsuario(Usuario usuario);
 
-    @RequestLine("PUT /posts/{id}")
-    void updateUsuario(@Param("id") Integer id, Usuario usuario);
+    @RequestLine("PUT /api/Usuario/Put")
+    void updateUsuario(Integer id, Usuario usuario);
 
 }

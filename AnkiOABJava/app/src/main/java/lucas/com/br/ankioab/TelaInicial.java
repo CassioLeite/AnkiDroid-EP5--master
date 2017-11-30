@@ -45,7 +45,7 @@ public class TelaInicial extends AppCompatActivity {
         String emailUsuario =  email.getText().toString();
         String senhaUsuario = senha.getText().toString();
 
-        Usuario confimarUsuario = lerUsuarioTask.doInBackground(emailUsuario);
+        Usuario confimarUsuario = lerUsuarioTask.doInBackground(emailUsuario, senhaUsuario);
 
         if (confimarUsuario != null) {
             String senhaOficial = confimarUsuario.getSenha().toString();

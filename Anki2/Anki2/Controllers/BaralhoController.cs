@@ -58,9 +58,9 @@ namespace Anki2.Controllers
             }
         }
 
-		// GET: api/Baralho/Get?id=string
-		[HttpGet]
-		public Baralho Get(int id)
+		// POST: api/Baralho/Get
+		[HttpPost]
+		public Baralho Get([FromBody]int id)
         {
             try
             {
@@ -92,7 +92,7 @@ namespace Anki2.Controllers
             }
         }
 
-		// POST: api/Baralho
+		// POST: api/Baralho/Post
 		[HttpPost]
 		public HttpResponseMessage Post([FromBody]Baralho b)
         {
@@ -115,9 +115,9 @@ namespace Anki2.Controllers
             }
         }
 
-		// PUT: api/Baralho/5
+		// POST: api/Baralho/Put
 		[HttpPost]
-		public HttpResponseMessage Put(int id, [FromBody]Baralho b)
+		public HttpResponseMessage Put([FromBody]Baralho b)
         {
             try
             {
@@ -138,8 +138,9 @@ namespace Anki2.Controllers
             }
         }
 
-        // DELETE: api/Baralho/5
-        public void Delete(int id)
+        // POST: api/Baralho/Delete
+        [HttpPost]
+        public void Delete([FromBody]int id)
         {
             try
             {

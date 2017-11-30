@@ -14,6 +14,7 @@ namespace Anki2.Controllers
         public SqlCommand Cmd;
         public SqlDataReader Dr;
         public Conexao con;
+        public Usuario usuario;
 
         public UsuarioController()
         {
@@ -56,40 +57,14 @@ namespace Anki2.Controllers
 			}
 		}
 
-		// GET: api/Usuario/Get?id=string
-		[HttpGet]
-		public Usuario Get(string id)
+		// POST: api/Usuario/Get
+		[HttpPost]
+		public Usuario Get([FromBody] string email, string senha)
 		{
-			try
-			{
-				Cmd = new SqlCommand("select * from Usuario WHERE Email=@v1", Con);
-				Cmd.Parameters.AddWithValue("@v1", id);
-				Dr = Cmd.ExecuteReader();
-				Usuario u = null;
-
-				if (Dr.Read())
-				{
-					u = new Usuario
-					{
-						CodUsuario = Convert.ToInt32(Dr["CodUsuario"]),
-						NomeUsuario = Convert.ToString(Dr["NomeUsuario"]),
-						Email = Convert.ToString(Dr["Email"]),
-						Senha = Convert.ToString(Dr["Senha"])
-					};
-				}
-				return u;
-			}
-			catch (Exception ex)
-			{
-				throw new Exception("" + ex.Message);
-			}
-			finally
-			{
-				con.FecharConexao();
-			}
+            return usuario.AutenticarUsuario(email, senha);
 		}
 
-		// POST: api/Usuario
+		// POST: api/Usuario/Post
 		[HttpPost]
 		public HttpResponseMessage Post([FromBody]Usuario value)
 		{
@@ -114,9 +89,9 @@ namespace Anki2.Controllers
 			}
 		}
 
-		// PUT: api/Usuario/5
+		// POST: api/Usuario/Put
 		[HttpPost]
-		public HttpResponseMessage Put(int id, [FromBody]Usuario u)
+		public HttpResponseMessage Put([FromBody]Usuario u)
 		{
 			try
 			{
@@ -139,8 +114,9 @@ namespace Anki2.Controllers
 			}
 		}
 
-		// DELETE: api/Usuario/5
-		public void Delete(int id)
+		// POST: api/Usuario/Delete
+        [HttpPost]
+		public void Delete([FromBody] int id)
 		{
 			try
 			{

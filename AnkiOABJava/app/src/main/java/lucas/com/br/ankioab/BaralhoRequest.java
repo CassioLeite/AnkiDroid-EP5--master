@@ -11,18 +11,18 @@ import feign.RequestLine;
 
 public interface BaralhoRequest {
 
-    @RequestLine("GET /api/Baralho/Get?id={id}")
-    Baralho getBaralho(@Param("id") Integer id);
+    @RequestLine("POST /api/Baralho/Get")
+    Baralho getBaralho(Integer id);
 
     @RequestLine("GET /api/Baralho/GetAll")
     List<Baralho> getAllBaralho();
 
-    @RequestLine("DELETE /posts/{id}/")
-    void deleteBaralho(@Param("id") Integer id);
+    @RequestLine("POST /api/Baralho/Delete")
+    void deleteBaralho(Integer id);
 
-    @RequestLine("POST /api/Baralho/")
+    @RequestLine("POST /api/Baralho/Post")
     void createBaralho(Baralho baralho);
 
-    @RequestLine("PUT /posts/{id}")
-    void updateBaralho(@Param("id") Integer id, Baralho baralho);
+    @RequestLine("POST /api/Baralho/Put")
+    void updateBaralho(Integer codBaralho, Baralho baralho);
 }
