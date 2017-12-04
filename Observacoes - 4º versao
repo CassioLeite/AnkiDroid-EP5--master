@@ -1,0 +1,39 @@
+Observacoes gerais:
+*Retirar o diretório package 
+*Comittar com Git Ignore
+
+*Ler sobre boas práticas no moodle:
+-Padrão SOLID responsabilidade única
+-Deixar URLs mais “amigáveis no padrão rest.
+
+
+Class Conexão.cs
+-URL de conexão não pode estar em código fonte, tem que estar na web config.
+-Atributos sempre privados (para conexão principalmente).
+-Retirar atributos não utilizados (cmd).
+
+Class Baralho.controller
+*Alterar primeira letra de nomes de métodos/pacotes para minúscula (ex.: Baralho).
+
+*Tratamento de erros:
+-Não devolver erros para usuários. 
+-Devolver o status (ex,: status 500 com a respevtiva mensagem)
+
+*APIs devem iniciar com letra minúscula.
+-Exemplo: get/api/baralho 
+
+*Criar class de acordo com o padrão repositor (exemplo: a classe baralho repositor deve acessar o banco de dados)
+
+
+
+Class Usuário Controller
+*Tirar todos os gets das urls (usuário/login)
+
+*Utilizar o padrão de projeto adapter (para pegar o read e converter os DR)
+-(Sera utilizado um adapter em cada uma das três classes que recebem o método da classe usuario adapter: baralho controller, usuário controller e carta controller)
+-Criar “adapter pra um” e “adapter para lista”
+-Ao invés de criar muitos adapter, criar um Singleton adapter que devolve sempre a mesma instância do adapter.
+
+-adapter = UsuarioAdapterSingleton.getInstance();
+*vide email.
+
