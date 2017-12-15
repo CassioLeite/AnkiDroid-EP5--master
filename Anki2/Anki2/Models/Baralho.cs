@@ -43,8 +43,5 @@ namespace Anki2.Models
                 nomeBaralho = value;
             }
         }
-
-
-
     }
 }

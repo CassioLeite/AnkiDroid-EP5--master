@@ -5,120 +5,96 @@ using System.Net.Http;
 using System.Web.Http;
 using System.Data.SqlClient;
 using Anki2.Models;
+using Anki2.Adapters;
 
 namespace Anki2.Controllers
 {
     public class CartaController : ApiController
     {
-        private Conexao con;
-        public SqlConnection Con;
-        public SqlCommand Cmd;
-        public SqlDataReader Dr;
+        
+        private SqlConnection Con;
+        private SqlCommand Cmd;
+        private CartaAdapter adapter;
 
         public CartaController()
         {
-            con = new Conexao();
-            con.AbrirConexao();
-            Con = con.Con;
+            Con = Conexao.Con;
+            adapter = new CartaAdapter();
         }
 
-		// GET: api/Carta/GetAll
+		//api/carta
 		[HttpGet]
 		public List<Carta> Get()
         {
             try
             {
                 Cmd = new SqlCommand("select * from Carta", Con);
-                
-                Dr = Cmd.ExecuteReader();
-                Carta c = null;
-                List<Carta> cartas = new List<Carta>();
+                List<Carta> cartas = adapter.adaptList(Cmd);
 
-                while (Dr.Read())
-                {
-					c = new Carta
-					{
-						CodCarta = Convert.ToInt32(Dr["CodCarta"]),
-						Frente = Convert.ToString(Dr["Frente"]),
-						Verso = Convert.ToString(Dr["Verso"]),
-						CodBaralho = Convert.ToInt32(Dr["CodBaralho"])
-					};
-					cartas.Add(c);
-                }
                 return cartas;
+
             }
             catch (Exception ex)
             {
 
-                throw new Exception("" + ex.Message);
+                throw new Exception("500, Internal Server Error" + ex.Message);
             }
             finally
             {
-                con.FecharConexao();
+                Conexao.FecharConexao();
             }
         }
 
-		// GET: api/Carta/Get?id=string
+		//api/carta
 		[HttpGet]
-		public List<Carta> Get(int id)
+        public Carta Get(int id)
         {
             try
             {
-                Cmd = new SqlCommand("select * from Carta WHERE CodBaralho=@v1", Con);
+                Cmd = new SqlCommand("select * from Carta WHERE CodCarta=@v1", Con);
                 Cmd.Parameters.AddWithValue("@v1", id);
-                Dr = Cmd.ExecuteReader();
-                Carta c = null;
-                List<Carta> cartas = new List<Carta>();
 
-                while (Dr.Read())
-                {
-					c = new Carta
-					{
-						CodCarta = Convert.ToInt32(Dr["CodCarta"]),
-						Frente = Convert.ToString(Dr["Frente"]),
-						Verso = Convert.ToString(Dr["Verso"]),
-						CodBaralho = Convert.ToInt32(Dr["CodBaralho"])
-					};
-					cartas.Add(c);
-                }
-                return cartas;
+                Carta c = adapter.adaptOne(Cmd);
+
+
+                return c;
+
             }
             catch (Exception ex)
             {
-                throw new Exception("" + ex.Message);
+
+                throw new Exception("500, Internal Server Error" + ex.Message);
             }
             finally
             {
-                con.FecharConexao();
+                Conexao.FecharConexao();
             }
         }
 
-		// POST: api/Carta
-		[HttpPost]
+        //api/carta
+        [HttpPost]
 		public HttpResponseMessage Post([FromBody]Carta c)
         {
             try
             {
-                Cmd = new SqlCommand("insert into Carta (Frente, Verso, CodBaralho) values(@v1, @v2, @v3)", Con);
+                Cmd = new SqlCommand("insert into Carta (Frente, Verso) values(@v1, @v2)", Con);
                 Cmd.Parameters.AddWithValue("@v1", c.Frente);
                 Cmd.Parameters.AddWithValue("@v2", c.Verso);
-                Cmd.Parameters.AddWithValue("@v3", c.CodBaralho);
                 Cmd.ExecuteNonQuery();
                 return new HttpResponseMessage(HttpStatusCode.Created);
-                //return base.Created(new Uri(Request.RequestUri + id), content);
 
             }
             catch (Exception ex)
             {
-                throw new Exception("Erro ao gravar Carta: " + ex.Message);
+                throw new Exception("500, Internal Server Error" + ex.Message);
             }
             finally
             {
-                con.FecharConexao();
+                Conexao.FecharConexao();
             }
         }
 
-		// PUT: api/Carta/5
+		//api/carta
 		[HttpPost]
 		public HttpResponseMessage Put(int id, [FromBody]Carta c)
         {
@@ -135,15 +111,15 @@ namespace Anki2.Controllers
             }
             catch (Exception ex)
             {
-                throw new Exception("Erro ao atualizar o Carta: " + ex.Message);
+                throw new Exception("500, Internal Server Error" + ex.Message);
             }
             finally
             {
-                con.FecharConexao();
+                Conexao.FecharConexao();
             }
         }
 
-        // DELETE: api/Carta/5
+        //api/carta
         public void Delete(int id)
         {
             try
@@ -154,11 +130,11 @@ namespace Anki2.Controllers
             }
             catch (Exception ex)
             {
-                throw new Exception("Erro ao excluir Carta" + ex.Message);
+                throw new Exception("500, Internal Server Error" + ex.Message);
             }
             finally
             {
-                con.FecharConexao();
+                Conexao.FecharConexao();
             }
         }
     }

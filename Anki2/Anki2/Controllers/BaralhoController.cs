@@ -5,44 +5,32 @@ using System.Net.Http;
 using System.Web.Http;
 using System.Data.SqlClient;
 using Anki2.Models;
+using Anki2.Adapters;
+//using Anki2;
 
 namespace Anki2.Controllers
 {
     public class BaralhoController : ApiController
     {
-        private Conexao con;
-        public SqlConnection Con;
-        public SqlCommand Cmd;
-        public SqlDataReader Dr;
+        private SqlConnection Con;
+        private SqlCommand Cmd;
+        
+        private BaralhoAdapter adapter;
 
         public BaralhoController()
         {
-            con = new Conexao();
-            con.AbrirConexao();
-            Con = con.Con;
+            Con = Conexao.Con;
+            adapter = new BaralhoAdapter();
         }
 
-		// GET: api/Baralho/GetAll
+		//api/baralho
 		[HttpGet]
 		public List<Baralho> GetAll()
         {
             try
             {
                 Cmd = new SqlCommand("select * from Baralho", Con);
-                
-                Dr = Cmd.ExecuteReader();
-                Baralho b = null;
-                List<Baralho> baralhos = new List<Baralho>();
-
-                while (Dr.Read())
-                {
-					b = new Baralho
-					{
-						CodBaralho = Convert.ToInt32(Dr["CodBaralho"]),
-						NomeBaralho = Convert.ToString(Dr["NomeBaralho"])
-					};
-					baralhos.Add(b);
-                }
+                List<Baralho> baralhos = adapter.adaptList(Cmd);
 
                 return baralhos;
 
@@ -50,33 +38,25 @@ namespace Anki2.Controllers
             catch (Exception ex)
             {
 
-                throw new Exception("" + ex.Message);
+                throw new Exception("500, Internal Server Error" + ex.Message);
             }
             finally
             {
-                con.FecharConexao();
+                Conexao.FecharConexao();
             }
         }
 
-		// POST: api/Baralho/Get
-		[HttpPost]
-		public Baralho Get([FromBody]int id)
+		//api/baralho
+		[HttpGet]
+		public Baralho Get(int id)
         {
             try
             {
                 Cmd = new SqlCommand("select * from Baralho WHERE CodBaralho=@v1", Con);
                 Cmd.Parameters.AddWithValue("@v1", id);
-                Dr = Cmd.ExecuteReader();
-                Baralho b = null;
-
-                if (Dr.Read())
-                {
-					b = new Baralho
-					{
-						CodBaralho = Convert.ToInt32(Dr["CodBaralho"]),
-						NomeBaralho = Convert.ToString(Dr["NomeBaralho"])
-					};
-				}
+                
+                Baralho b = adapter.adaptOne(Cmd);
+                
 
                 return b;
 
@@ -84,40 +64,39 @@ namespace Anki2.Controllers
             catch (Exception ex)
             {
 
-                throw new Exception("" + ex.Message);
+                throw new Exception("500, Internal Server Error" + ex.Message);
             }
             finally
             {
-                con.FecharConexao();
+                Conexao.FecharConexao();
             }
         }
 
-		// POST: api/Baralho/Post
+		//api/baralho
 		[HttpPost]
 		public HttpResponseMessage Post([FromBody]Baralho b)
         {
             try
             {
                 Cmd = new SqlCommand("insert into Baralho (NomeBaralho) values(@v1)", Con);
-                Cmd.Parameters.AddWithValue("@v1", b.NomeBaralho); ;
+                Cmd.Parameters.AddWithValue("@v1", b.NomeBaralho);
                 Cmd.ExecuteNonQuery();
                 return new HttpResponseMessage(HttpStatusCode.Created);
-                //return base.Created(new Uri(Request.RequestUri + id), content);
-
+                
             }
             catch (Exception ex)
             {
-                throw new Exception("Erro ao gravar Baralho: " + ex.Message);
+                throw new Exception("500, Internal Server Error" + ex.Message);
             }
             finally
             {
-                con.FecharConexao();
+                Conexao.FecharConexao();
             }
         }
 
-		// POST: api/Baralho/Put
+		//api/baralho
 		[HttpPost]
-		public HttpResponseMessage Put([FromBody]Baralho b)
+		public HttpResponseMessage Put(int id, [FromBody]Baralho b)
         {
             try
             {
@@ -130,17 +109,16 @@ namespace Anki2.Controllers
             }
             catch (Exception ex)
             {
-                throw new Exception("Erro ao atualizar o Baralho: " + ex.Message);
+                throw new Exception("500, Internal Server Error" + ex.Message);
             }
             finally
             {
-                con.FecharConexao();
+                Conexao.FecharConexao();
             }
         }
 
-        // POST: api/Baralho/Delete
-        [HttpPost]
-        public void Delete([FromBody]int id)
+        //api/baralho/
+        public void Delete(int id)
         {
             try
             {
@@ -152,11 +130,11 @@ namespace Anki2.Controllers
             catch (Exception ex)
             {
 
-                throw new Exception("Erro ao excluir Baralho" + ex.Message);
+                throw new Exception("500, Internal Server Error" + ex.Message);
             }
             finally
             {
-                con.FecharConexao();
+                Conexao.FecharConexao();
             }
         }
     }

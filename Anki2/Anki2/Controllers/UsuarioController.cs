@@ -5,66 +5,70 @@ using System.Net.Http;
 using System.Web.Http;
 using System.Data.SqlClient;
 using Anki2.Models;
+using Anki2.Adapters;
 
 namespace Anki2.Controllers
 {
     public class UsuarioController : ApiController
     {
         private SqlConnection Con;
-        public SqlCommand Cmd;
-        public SqlDataReader Dr;
-        public Conexao con;
-        public Usuario usuario;
+        private SqlCommand Cmd;
+        private UsuarioAdapter adapter;
 
         public UsuarioController()
         {
-            con = new Conexao();
-            con.AbrirConexao();
-            Con = con.Con;
+            Con = Conexao.Con;
+            adapter = new UsuarioAdapter();
         }
 
-		// GET: api/Usuario/GetAll
+		//api/usuario
 		[HttpGet]
 		public List<Usuario> GetAll()
 		{
 			try
-			{
-				Cmd = new SqlCommand("select * from Usuario", Con);
-				Dr = Cmd.ExecuteReader();
-				Usuario u = null;
-				List<Usuario> usuarios = new List<Usuario>();
+            {
+                Cmd = new SqlCommand("select * from Usuario", Con);
+                List<Usuario> usuarios = adapter.adaptList(Cmd);
 
-				while (Dr.Read())
-				{
-					u = new Usuario
-					{
-						CodUsuario = Convert.ToInt32(Dr["CodUsuario"]),
-						NomeUsuario = Convert.ToString(Dr["NomeUsuario"]),
-						Email = Convert.ToString(Dr["Email"]),
-						Senha = Convert.ToString(Dr["Senha"])
-					};
-					usuarios.Add(u);
-				}
-				return usuarios;
-			}
-			catch (Exception ex)
+                return usuarios;
+
+            }
+            catch (Exception ex)
 			{
-				throw new Exception("" + ex.Message);
+				throw new Exception("500, Internal Server Error" + ex.Message);
 			}
 			finally
 			{
-				con.FecharConexao();
+                Conexao.FecharConexao();
 			}
 		}
 
-		// POST: api/Usuario/Get
-		[HttpPost]
-		public Usuario Get([FromBody] string email, string senha)
+		//api/usuario
+		[HttpGet]
+		public Usuario Get(string id)
 		{
-            return usuario.AutenticarUsuario(email, senha);
+			try
+            {
+                Cmd = new SqlCommand("select * from Usuario WHERE CodUsuario=@v1", Con);
+                Cmd.Parameters.AddWithValue("@v1", id);
+
+                Usuario u = adapter.adaptOne(Cmd);
+
+
+                return u;
+
+            }
+            catch (Exception ex)
+			{
+				throw new Exception("500, Internal Server Error" + ex.Message);
+			}
+			finally
+			{
+                Conexao.FecharConexao();
+			}
 		}
 
-		// POST: api/Usuario/Post
+		//api/usuario
 		[HttpPost]
 		public HttpResponseMessage Post([FromBody]Usuario value)
 		{
@@ -81,17 +85,17 @@ namespace Anki2.Controllers
 			}
 			catch (Exception ex)
 			{
-				throw new Exception("Erro ao gravar Usuário: " + ex.Message);
+				throw new Exception("500, Internal Server Error" + ex.Message);
 			}
 			finally
 			{
-				con.FecharConexao();
+                Conexao.FecharConexao();
 			}
 		}
 
-		// POST: api/Usuario/Put
+		//api/usuario/
 		[HttpPost]
-		public HttpResponseMessage Put([FromBody]Usuario u)
+		public HttpResponseMessage Put(int id, [FromBody]Usuario u)
 		{
 			try
 			{
@@ -106,17 +110,16 @@ namespace Anki2.Controllers
 			}
 			catch (Exception ex)
 			{
-				throw new Exception("Erro ao atualizar o Usuário: " + ex.Message);
+				throw new Exception("500, Internal Server Error" + ex.Message);
 			}
 			finally
 			{
-				con.FecharConexao();
+                Conexao.FecharConexao();
 			}
 		}
 
-		// POST: api/Usuario/Delete
-        [HttpPost]
-		public void Delete([FromBody] int id)
+		//api/usuario
+		public void Delete(int id)
 		{
 			try
 			{
@@ -128,11 +131,11 @@ namespace Anki2.Controllers
 			catch (Exception ex)
 			{
 
-				throw new Exception("Erro ao excluir Usuário" + ex.Message);
+				throw new Exception("500, Internal Server Error" + ex.Message);
 			}
 			finally
 			{
-				con.FecharConexao();
+                Conexao.FecharConexao();
 			}
 		}
 	}

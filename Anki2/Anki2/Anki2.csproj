@@ -115,8 +115,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App_Start\WebApiConfig.cs" />
+    <Compile Include="Adapters\BaralhoAdapter.cs" />
     <Compile Include="Controllers\BaralhoController.cs" />
+    <Compile Include="Adapters\CartaAdapter.cs" />
     <Compile Include="Controllers\CartaController.cs" />
+    <Compile Include="Adapters\UsuarioAdapter.cs" />
     <Compile Include="Controllers\UsuarioController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -166,7 +169,7 @@
           <AutoAssignPort>True</AutoAssignPort>
           <DevelopmentServerPort>50307</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
-          <IISUrl>http://localhost:51189/</IISUrl>
+          <IISUrl>http://localhost:50836/</IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
           <UseCustomServer>False</UseCustomServer>
           <CustomServerUrl>http://10.50.7.5:50307/</CustomServerUrl>
